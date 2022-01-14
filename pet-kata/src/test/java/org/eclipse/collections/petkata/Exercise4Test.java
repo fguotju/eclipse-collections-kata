@@ -83,7 +83,7 @@ public class Exercise4Test extends PetDomainForKata
         Person person = this.people.detect(people->people.named("Bob Smith"));
 
         //get Bob Smith's pets' names
-        String names = person.getPets().collect(Pet::getName).makeString("&");
+        String names = person.getPets().collect(Pet::getName).makeString(" & ");
 
         Assertions.assertEquals("Dolly & Spot", names);
     }
