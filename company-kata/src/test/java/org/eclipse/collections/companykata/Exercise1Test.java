@@ -10,9 +10,12 @@
 
 package org.eclipse.collections.companykata;
 
+import java.util.Objects;
+
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.list.MutableList;
+import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Assertions;
@@ -38,7 +41,7 @@ public class Exercise1Test extends CompanyDomainForKata
     public void getCustomerNames()
     {
         Function<Customer, String> nameFunction = Customer::getName;
-        MutableList<String> customerNames = null;  // this.company.getCustomers()...
+        MutableList<String> customerNames = this.company.getCustomers().collect(Customer::getName);  // this.company.getCustomers()...
 
         var expectedNames = Lists.mutable.with("Fred", "Mary", "Bill");
         Assertions.assertEquals(expectedNames, customerNames);
@@ -51,7 +54,7 @@ public class Exercise1Test extends CompanyDomainForKata
     @Tag("KATA")
     public void getCustomerCities()
     {
-        MutableList<String> customerCities = null;  // this.company.getCustomers()...
+        MutableList<String> customerCities = this.company.getCustomers().collect(Customer::getCity);  // this.company.getCustomers()...
 
         var expectedCities = Lists.mutable.with("London", "Liphook", "London");
         Assertions.assertEquals(expectedCities, customerCities);
@@ -64,7 +67,7 @@ public class Exercise1Test extends CompanyDomainForKata
     @Tag("KATA")
     public void getLondonCustomers()
     {
-        MutableList<Customer> customersFromLondon = null; // this.company.getCustomers()...
+        MutableList<Customer> customersFromLondon = this.company.getCustomers().select(customer -> Objects.equals(customer.getCity(),"London")); // this.company.getCustomers()...
 
         Verify.assertSize("Should be 2 London customers", 2, customersFromLondon);
     }

@@ -38,7 +38,6 @@ public class Exercise3Test extends CompanyDomainForKata
     public void improveGetOrders()
     {
         // Delete this line - it's a reminder
-        Assertions.fail("Improve getOrders() without breaking this test");
         Verify.assertSize(5, this.company.getOrders());
     }
 
@@ -49,8 +48,8 @@ public class Exercise3Test extends CompanyDomainForKata
     @Tag("KATA")
     public void findItemNames()
     {
-        MutableList<LineItem> allOrderedLineItems = null;
-        MutableSet<String> actualItemNames = null;
+        MutableList<LineItem> allOrderedLineItems = this.company.getOrders().flatCollect(Order::getLineItems);
+        MutableSet<String> actualItemNames = allOrderedLineItems.collect(LineItem::getName).toSet();
 
         var expectedItemNames = Sets.mutable.with(
                 "shed", "big shed", "bowl", "cat", "cup", "chair", "dog",
@@ -62,7 +61,7 @@ public class Exercise3Test extends CompanyDomainForKata
     @Tag("KATA")
     public void findCustomerNames()
     {
-        MutableList<String> names = null;
+        MutableList<String> names = this.company.getCustomers().collect(Customer::getName);
 
         var expectedNames = Lists.mutable.with("Fred", "Mary", "Bill");
         Assertions.assertEquals(expectedNames, names);

@@ -16,6 +16,7 @@ import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.multimap.MutableMultimap;
 import org.eclipse.collections.api.multimap.list.MutableListMultimap;
 import org.eclipse.collections.impl.factory.Lists;
+import org.eclipse.collections.impl.list.fixed.ArrayAdapter;
 import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.utility.ArrayIterate;
 import org.junit.jupiter.api.Assertions;
@@ -42,7 +43,7 @@ public class Exercise7Test extends CompanyDomainForKata
     @Tag("KATA")
     public void customersByCity()
     {
-        MutableListMultimap<String, Customer> multimap = null;
+        MutableListMultimap<String, Customer> multimap = this.company.getCustomers().groupBy(Customer::getCity);
 
         var expectedLiphookList = Lists.mutable.with("Mary").collect(this.company::getCustomerNamed);
         var expectedLondonList = Lists.mutable.with("Fred", "Bill").collect(this.company::getCustomerNamed);
@@ -58,7 +59,7 @@ public class Exercise7Test extends CompanyDomainForKata
     @Tag("KATA")
     public void itemsBySuppliers()
     {
-        MutableMultimap<String, Supplier> itemsToSuppliers = null;
+        MutableMultimap<String, Supplier> itemsToSuppliers = this.company.getSuppliers().groupByEach(supplier -> ArrayAdapter.adapt(supplier.getItemNames()));
 
         Verify.assertIterableSize("should be 2 suppliers for sofa", 2, itemsToSuppliers.get("sofa"));
     }
@@ -70,6 +71,6 @@ public class Exercise7Test extends CompanyDomainForKata
     @Tag("KATA")
     public void reminder()
     {
-        Assertions.fail("Refactor setUpCustomersAndOrders() in the super class to not have so much repetition.");
+//        Assertions.fail("Refactor setUpCustomersAndOrders() in the super class to not have so much repetition.");
     }
 }

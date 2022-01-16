@@ -14,8 +14,7 @@ import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.impl.list.mutable.FastList;
-import org.junit.jupiter.api.Assertions;
+import org.eclipse.collections.impl.block.factory.Predicates;
 
 /**
  * A company has a {@link MutableList} of {@link Customer}s.  It has an array of {@link Supplier}s, and a name.
@@ -26,7 +25,7 @@ public class Company
     private final MutableList<Customer> customers = Lists.mutable.empty();
 
     // Suppliers are array based. Refactor to a MutableList<Supplier>
-    private Supplier[] suppliers = new Supplier[0];
+    private MutableList<Supplier> suppliers = Lists.mutable.empty();
 
     public Company(String name)
     {
@@ -43,7 +42,7 @@ public class Company
         this.customers.add(aCustomer);
     }
 
-    public MutableList<Customer> getCustomers()
+    public MutableList<Customer>  getCustomers()
     {
         return this.customers;
     }
@@ -55,13 +54,7 @@ public class Company
      */
     public MutableList<Order> getOrders()
     {
-        Assertions.fail("Refactor this code to use Eclipse Collections as part of Exercise 3");
-        MutableList<Order> orders = Lists.mutable.empty();
-        for (Customer customer : this.customers)
-        {
-            orders.addAll(customer.getOrders());
-        }
-        return orders;
+        return this.customers.flatCollect(Customer::getOrders);
     }
 
     public Customer getMostRecentCustomer()
@@ -76,14 +69,10 @@ public class Company
     {
         // need to replace the current array of suppliers with another, larger array
         // Of course, normally one would not use an array.
-
-        Supplier[] currentSuppliers = this.suppliers;
-        this.suppliers = new Supplier[currentSuppliers.length + 1];
-        System.arraycopy(currentSuppliers, 0, this.suppliers, 0, currentSuppliers.length);
-        this.suppliers[this.suppliers.length - 1] = supplier;
+        this.suppliers.add(supplier);
     }
 
-    public Supplier[] getSuppliers()
+    public MutableList<Supplier> getSuppliers()
     {
         return this.suppliers;
     }
@@ -96,7 +85,7 @@ public class Company
      */
     public Customer getCustomerNamed(String name)
     {
-        Assertions.fail("Implement this method as part of Exercise 2");
-        return null;
+        Predicates<Customer> findCustomerByName = Predicates.attributeEqual(Customer::getName, name);
+        return customers.detect(findCustomerByName);
     }
 }

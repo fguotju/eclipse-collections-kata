@@ -10,9 +10,15 @@
 
 package org.eclipse.collections.companykata;
 
+import org.eclipse.collections.api.bag.Bag;
+import org.eclipse.collections.api.bag.sorted.MutableSortedBag;
 import org.eclipse.collections.api.block.function.primitive.DoubleFunction;
+import org.eclipse.collections.api.list.MutableList;
+import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.function.AddFunction;
+import org.eclipse.collections.impl.factory.Bags;
 import org.eclipse.collections.impl.factory.Lists;
+import org.eclipse.collections.impl.factory.SortedBags;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +33,7 @@ public class Order
     private static final AtomicInteger NEXT_ORDER_NUMBER = new AtomicInteger(1);
 
     private final int orderNumber;
-    private final List<LineItem> lineItems = new ArrayList<>();
+    private final MutableSortedBag<LineItem> lineItems = SortedBags.mutable.empty(Comparators.byFunction(LineItem::getName));
     private boolean delivered;
 
     public Order()
@@ -55,7 +61,12 @@ public class Order
         this.lineItems.add(aLineItem);
     }
 
-    public List<LineItem> getLineItems()
+    public void addLineItem(LineItem aLineItem, int times)
+    {
+        this.lineItems.addOccurrences(aLineItem,times);
+    }
+
+    public Bag<LineItem> getLineItems()
     {
         return this.lineItems;
     }
@@ -71,8 +82,12 @@ public class Order
      */
     public double getValue()
     {
-        return Lists.adapt(this.lineItems)
-                .collect(LineItem::getValue)
-                .injectInto(0.0, AddFunction.DOUBLE_TO_DOUBLE);
+        return this.lineItems.sumOfDouble(LineItem::getValue);
     }
+
+    public boolean containsItemNamed(String itemName)
+    {
+        return this.lineItems.containsBy(LineItem::getName, itemName);
+    }
+
 }
